@@ -1,0 +1,43 @@
+def insertGene():
+    
+# This function asks user for a target cut site, a target locus, and a DNA sequence to be inserted.
+# The function outputs primers to allow one to PCR the insert with homology to the cut site. The final
+# integration happens 17nt from the cut site in both direction, such that a 34nt region is deleted.
+# The current cut site architecture is:  >>>>> YtRNAp-HDV ribozyme- >20nt< -gRNA <<<<<
+
+    from Bio.Seq import Seq
+    locusName=input("Locus name, using quotes: ")
+    cutsite=input("20-mer cut sequence, using quotes: ").upper()
+    locus=input("Locus sequence +/- a few kb, using quotes: ")
+    insertName=input("Name of gene to be inserted, using quotes: ")
+    insert=input("Enter insert DNA sequence, using quotes: ")
+
+
+    if locus.find(cutsite)==-1:                   # If cutsite sequence found in ANTISENSE
+        locus=Seq(locus).reverse_complement()     # then reverse DNA, and turn it into a string
+    
+    
+    index=locus.find(cutsite)                     # index gives the start position of cutsite within locus
+    
+        
+    Lprimer=locus[index-30:index]+insert[0:29]
+    Rprimer=Seq(insert[len(insert)-29:len(insert)]+locus[index+34:index+64]).reverse_complement()
+   
+    Lhom=locus[index-60:index]
+    Rhom=Seq(locus[index+34:index+94]).reverse_complement()
+    
+ 
+    print("L_" + insertName + "_:" + locusName + " " + Lprimer)
+    print("R_" + insertName + "_:" + locusName + " " + Rprimer)
+    print("Lext:" + locusName + " " + Lhom)
+    print("Rext:" + locusName + " " + Rhom)
+    
+    
+
+    
+    
+    
+    
+# now to run, type the program and ^Enter or play. E.g. remove hash below to run delGene()
+
+insertGene()
